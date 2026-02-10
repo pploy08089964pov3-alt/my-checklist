@@ -1,10 +1,11 @@
 {
-  "name": "My Smart Checklist",
+  "name": "My Checklist",
   "short_name": "Checklist",
-  "start_url": "./index.html",
+  "start_url": "/my-checklist/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
+  "scope": "/my-checklist/",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/179/179386.png",
