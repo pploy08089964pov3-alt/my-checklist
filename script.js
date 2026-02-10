@@ -107,14 +107,15 @@ function setAlarm(task) {
                 if (sound) sound.play().catch(() => {});
 
                 // 2. ส่ง Notification จริงๆ เข้าเครื่อง (นี่คือส่วนที่จะทำให้เด้งนอกแอป)
-            if ('serviceWorker' in navigator && Notification.permission === "granted") {
-               navigator.serviceWorker.ready.then(registration => {
-               registration.showNotification("Checklist", {
-               body: "⏰ ถึงเวลา: " + task.text,
-               icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
-               vibrate: [200, 100, 200], // สั่งให้สั่น
-               tag: 'task-' + task.id,    // ป้องกันเด้งซ้ำ
-               requireInteraction: true   // ให้ค้างหน้าจอจนกว่าจะกดปิด
+           // ใช้โค้ดชุดนี้แทน Java ที่คุณส่งมา
+if ('serviceWorker' in navigator && Notification.permission === "granted") {
+    navigator.serviceWorker.ready.then(registration => {
+        registration.showNotification("Checklist", {
+            body: "⏰ ถึงเวลา: " + task.text,
+            icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
+            vibrate: [200, 100, 200], // สั่งให้สั่น
+            tag: 'task-' + task.id,    // ป้องกันเด้งซ้ำ
+            requireInteraction: true   // ให้ค้างหน้าจอจนกว่าจะกดปิด
         });
     });
 }
@@ -146,4 +147,5 @@ function removeTask(id, element) {
     element.parentElement.remove();
     let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
     localStorage.setItem('myTasks', JSON.stringify(tasks.filter(t => t.id !== id)));
+
 }
