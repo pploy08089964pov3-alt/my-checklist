@@ -102,23 +102,22 @@ function setAlarm(task) {
             const currentTask = tasks.find(t => t.id === task.id);
             
             if (currentTask && !currentTask.completed) {
-                // 1. เล่นเสียงแจ้งเตือน
+                // 1. เล่นเสียง (ถ้ามีไฟล์เสียง)
                 const sound = document.getElementById('notificationSound');
                 if (sound) sound.play().catch(() => {});
 
-                // 2. ส่ง Notification จริงๆ เข้าเครื่อง (นี่คือส่วนที่จะทำให้เด้งนอกแอป)
+                // 2. ใช้คำสั่งนี้แทน alert() เพื่อไม่ให้เห็นชื่อลิงก์
                 if ('serviceWorker' in navigator && Notification.permission === "granted") {
                     navigator.serviceWorker.ready.then(registration => {
                         registration.showNotification("Checklist", {
                             body: `⏰ ถึงเวลาแล้ว: ${task.text}`,
                             icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
                             vibrate: [200, 100, 200],
-                            badge: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
-                            tag: 'task-' + task.id // ป้องกันแจ้งเตือนซ้ำ
+                            badge: 'https://cdn-icons-png.flaticon.com/512/179/179386.png'
                         });
                     });
                 } else {
-                    // ถ้าขอสิทธิ์ไม่สำเร็จจริงๆ ค่อยใช้ alert เป็นตัวสุดท้าย
+                    // ถ้าเข้าเงื่อนไขไม่ได้จริงๆ ถึงจะยอมให้ใช้ alert (ซึ่งจะมีชื่อลิงก์)
                     alert("⏰ ถึงเวลาแล้ว: " + task.text);
                 }
             }
@@ -152,4 +151,5 @@ function removeTask(id, element) {
     element.parentElement.remove();
     let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
     localStorage.setItem('myTasks', JSON.stringify(tasks.filter(t => t.id !== id)));
+
 }
