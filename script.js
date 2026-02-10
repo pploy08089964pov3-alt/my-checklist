@@ -81,17 +81,33 @@ function setAlarm(task) {
 
     if (delay > 0) {
         setTimeout(() => {
+            // เช็คสถานะก่อนเตือน
             let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
             const currentTask = tasks.find(t => t.id === task.id);
             
             if (currentTask && !currentTask.completed) {
+                
+                // 1. แจ้งเตือนผ่าน Service Worker (เด้งบนหน้าจอล็อคได้ดีกว่า)
+                if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.showNotification("🔔 ถึงเวลาแล้ว!", {
+                            body: task.text,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png', // ไอคอนแอป
+                            vibrate: [200, 100, 200], // สั่นสำหรับ Android
+                            tag: 'task-alert' // ป้องกันการเด้งซ้ำ
+                        });
+                    });
+                } else if (Notification.permission === "granted") {
+                    // แบบสำรองถ้า Service Worker ไม่พร้อม
+                    new Notification("🔔 " + task.text);
+                }
+
+                // 2. เล่นเสียง
                 const sound = document.getElementById('notificationSound');
                 if (sound) sound.play().catch(() => {});
                 
-                if (Notification.permission === "granted") {
-                    new Notification("🔔 แจ้งเตือน: " + task.text);
-                }
-                alert("⏰ ถึงเวลา: " + task.text);
+                // 3. แจ้งเตือนแบบ Alert (แสดงผลกลางหน้าจอแอป)
+                alert("⏰ แจ้งเตือน: " + task.text);
             }
         }, delay);
     }
