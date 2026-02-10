@@ -1,4 +1,21 @@
-console.log("สคริปต์โหลดสำเร็จ!");
+// 1. ลงทะเบียน Service Worker (สำคัญมากสำหรับการแจ้งเตือนบน Android)
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(err => console.log('Service Worker Error:', err));
+}
+
+// 2. ส่วนขออนุญาตเดิมของคุณ (ปรับให้รองรับการกดอนุญาตซ้ำ)
+function requestNotificationPermission() {
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("Notification permission granted.");
+            }
+        });
+    }
+}
+requestNotificationPermission();
 
 // ขออนุญาตแจ้งเตือน
 if (Notification.permission !== "granted") {
