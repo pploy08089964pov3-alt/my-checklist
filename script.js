@@ -102,25 +102,25 @@ function setAlarm(task) {
             const currentTask = tasks.find(t => t.id === task.id);
             
             if (currentTask && !currentTask.completed) {
-                // 1. เล่นเสียง
+                // 1. เล่นเสียงแจ้งเตือน
                 const sound = document.getElementById('notificationSound');
                 if (sound) sound.play().catch(() => {});
 
-                // 2. แจ้งเตือนข้อความ (แบบ Android PWA)
-                if ('serviceWorker' in navigator) {
+                // 2. ส่ง Notification จริงๆ เข้าเครื่อง (นี่คือส่วนที่จะทำให้เด้งนอกแอป)
+                if ('serviceWorker' in navigator && Notification.permission === "granted") {
                     navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification("🔔 " + task.text, {
-                            body: "ได้เวลาทำรายการนี้แล้ว!",
+                        registration.showNotification("Checklist", {
+                            body: `⏰ ถึงเวลาแล้ว: ${task.text}`,
                             icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
-                            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110], // รูปแบบการสั่น
-                            requireInteraction: true, // ข้อความจะไม่หายไปจนกว่าจะกดปิด
-                            tag: 'checklist-notification-' + task.id
+                            vibrate: [200, 100, 200],
+                            badge: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
+                            tag: 'task-' + task.id // ป้องกันแจ้งเตือนซ้ำ
                         });
                     });
+                } else {
+                    // ถ้าขอสิทธิ์ไม่สำเร็จจริงๆ ค่อยใช้ alert เป็นตัวสุดท้าย
+                    alert("⏰ ถึงเวลาแล้ว: " + task.text);
                 }
-                
-                // 3. Alert สำรอง
-                alert("⏰ ถึงเวลาแล้ว: " + task.text);
             }
         }, delay);
     }
