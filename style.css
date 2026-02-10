@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box; /* ป้องกันขนาดเกินหน้าจอ */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    width: 100%;       /* ยืดตามหน้าจอ */
+    max-width: 450px;  /* แต่ไม่ให้กว้างเกิน 450px ในคอม */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px; /* ขนาดกำลังดีสำหรับนิ้วมือจิ้ม */
+}
+
+button {
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+li {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    
+    /* --- ส่วนสำคัญที่ทำให้ปุ่มไปอยู่ขวาสุด --- */
+    display: flex;            /* เปิดใช้การจัดวางแบบยืดหยุ่น */
+    justify-content: space-between; /* ดันเนื้อหาไปซ้ายสุด และขวาสุด */
+    align-items: center;      /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    gap: 15px;                /* ระยะห่างระหว่างข้อความกับปุ่ม */
+}
+
+li div {
+    flex-grow: 1;             /* ให้ส่วนข้อความยืดพื้นที่ที่เหลือทั้งหมด */
+}
+
+li button {
+    flex-shrink: 0;           /* สั่งไม่ให้ปุ่มโดนบีบจนเบี้ยว */
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+input[type="datetime-local"] {
+    font-family: 'Segoe UI', sans-serif;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    width: 100%; /* ให้กว้างเต็มหน้าจอแอป */
+    cursor: pointer;
+}
+
+/* ทำให้ตัว Placeholder (ว/ด/ป --:--) ดูจางลงสวยๆ (สำหรับบาง Browser) */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5); /* ปรับสีไอคอนปฏิทินให้ดูซอฟต์ลง */
+}
+
+/* เมื่อติ๊กถูกแล้ว ให้ข้อความโดนขีดฆ่าและจางลง */
+li.completed .task-text {
+    text-decoration: line-through;
+    color: #888;
+}
+
+li.completed {
+    background-color: #f9f9f9;
+    border-left: 5px solid #28a745; /* เปลี่ยนขอบเป็นสีเขียวเมื่อเสร็จ */
+}
+
+/* จัดตำแหน่ง Checkbox ให้สวยงาม */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

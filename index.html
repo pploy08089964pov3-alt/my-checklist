@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>My Smart Checklist</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/179/179386.png">
+</head>
+<body>
+    <div class="container">
+        <h2>📝 รายการของฉัน</h2>
+        <div class="input-group">
+            <input type="text" id="todoInput" placeholder="ต้องทำอะไร...">
+            <input type="text" id="reminderTime" 
+      <input type="text" id="reminderTime" placeholder="📅 เลือกวันที่และเวลา...">
+            <button onclick="addTask()">เพิ่มรายการ</button>
+        </div>
+        <ul id="todoList"></ul>
+    </div>
+    <script src="script.js"></script>
+    <audio id="notificationSound" src="ping.mp3" preload="auto"></audio>
+</body>
+</html>
