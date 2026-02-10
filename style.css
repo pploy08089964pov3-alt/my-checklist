@@ -1,48 +1,66 @@
-* {
-    box-sizing: border-box; /* ป้องกันขนาดเกินหน้าจอ */
-    margin: 0;
-    padding: 0;
-}
-
+/* ตั้งค่าฟอนต์และการจัดวางพื้นฐาน */
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
     display: flex;
     justify-content: center;
-    padding: 20px;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 50px;
 }
 
+/* กล่องสีขาวตรงกลาง */
 .container {
     background: white;
     padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    width: 100%;       /* ยืดตามหน้าจอ */
-    max-width: 450px;  /* แต่ไม่ให้กว้างเกิน 450px ในคอม */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 400px;
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+h2 {
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
-input {
+/* ปรับช่องกรอกข้อมูลให้เต็มความกว้าง */
+input[type="text"], 
+input[type="datetime-local"] {
+    width: 100%;
     padding: 12px;
+    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 16px; /* ขนาดกำลังดีสำหรับนิ้วมือจิ้ม */
+    box-sizing: border-box; /* สำคัญมาก: ทำให้ padding ไม่ดันกรอบ */
+    font-size: 16px;
 }
 
-button {
+/* ปุ่มเพิ่มรายการสีน้ำเงินสวยๆ */
+#addBtn {
+    width: 100%;
     padding: 12px;
-    background: #007bff;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
+    font-size: 16px;
     font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#addBtn:hover {
+    background-color: #0056b3;
+}
+
+/* จัดรายการ List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
 }
 
 li {
@@ -50,58 +68,39 @@ li {
     border: 1px solid #eee;
     padding: 15px;
     margin-bottom: 10px;
-    border-radius: 8px;
-    
-    /* --- ส่วนสำคัญที่ทำให้ปุ่มไปอยู่ขวาสุด --- */
-    display: flex;            /* เปิดใช้การจัดวางแบบยืดหยุ่น */
-    justify-content: space-between; /* ดันเนื้อหาไปซ้ายสุด และขวาสุด */
-    align-items: center;      /* จัดให้อยู่ตรงกลางแนวตั้ง */
-    gap: 15px;                /* ระยะห่างระหว่างข้อความกับปุ่ม */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
 }
 
-li div {
-    flex-grow: 1;             /* ให้ส่วนข้อความยืดพื้นที่ที่เหลือทั้งหมด */
+/* เมื่อติ๊กถูกแล้วให้ขีดฆ่าและจางลง */
+li.completed {
+    background-color: #f8f9fa;
+    opacity: 0.7;
 }
 
-li button {
-    flex-shrink: 0;           /* สั่งไม่ให้ปุ่มโดนบีบจนเบี้ยว */
-    background: #ff4757;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-input[type="datetime-local"] {
-    font-family: 'Segoe UI', sans-serif;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    color: #333;
-    width: 100%; /* ให้กว้างเต็มหน้าจอแอป */
-    cursor: pointer;
-}
-
-/* ทำให้ตัว Placeholder (ว/ด/ป --:--) ดูจางลงสวยๆ (สำหรับบาง Browser) */
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    filter: invert(0.5); /* ปรับสีไอคอนปฏิทินให้ดูซอฟต์ลง */
-}
-
-/* เมื่อติ๊กถูกแล้ว ให้ข้อความโดนขีดฆ่าและจางลง */
 li.completed .task-text {
     text-decoration: line-through;
     color: #888;
 }
 
-li.completed {
-    background-color: #f9f9f9;
-    border-left: 5px solid #28a745; /* เปลี่ยนขอบเป็นสีเขียวเมื่อเสร็จ */
+/* ตกแต่งปุ่มลบ */
+li button {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-/* จัดตำแหน่ง Checkbox ให้สวยงาม */
+li button:hover {
+    background: #ff6b81;
+}
+
+/* ปรับขนาด Checkbox */
 input[type="checkbox"] {
     width: 20px;
     height: 20px;

@@ -1,19 +1,38 @@
-// ขออนุญาตแจ้งเตือน (ต้องกดตกลงเมื่อเว็บถาม)
+console.log("สคริปต์โหลดสำเร็จ!");
+
+// ขออนุญาตแจ้งเตือน
 if (Notification.permission !== "granted") {
     Notification.requestPermission();
 }
 
-document.addEventListener('DOMContentLoaded', getTasks);
-
-// ใช้ ID ให้ตรงกับ HTML
-document.getElementById('addBtn').addEventListener('click', addTask);
+// รอให้หน้าเว็บโหลดเสร็จก่อนค่อยทำงาน
+window.onload = function() {
+    const addButton = document.getElementById('addBtn');
+    
+    if (addButton) {
+        console.log("เจอตัวปุ่มแล้ว!");
+        addButton.onclick = addTask;
+    } else {
+        console.error("หาปุ่ม 'addBtn' ไม่เจอในหน้า HTML!");
+    }
+    
+    getTasks();
+};
 
 function addTask() {
+    console.log("กำลังพยายามเพิ่มรายการ...");
+    
     const taskInput = document.getElementById('todoInput');
     const timeInput = document.getElementById('reminderTime');
 
-    // แก้ปัญหา: เช็คค่าว่างให้ละเอียดขึ้น
-    if (!taskInput.value.trim()) {
+    // 1. เช็คว่าเจอช่องกรอกไหม
+    if (!taskInput || !timeInput) {
+        console.error("หาช่องกรอกข้อมูลไม่เจอ!");
+        return;
+    }
+
+    // 2. เช็คว่ากรอกข้อความหรือยัง
+    if (taskInput.value.trim() === "") {
         alert("กรุณากรอกรายการที่ต้องทำ");
         return;
     }
@@ -21,21 +40,25 @@ function addTask() {
     const taskData = {
         id: Date.now(),
         text: taskInput.value,
-        time: timeInput.value, 
+        time: timeInput.value,
         completed: false
     };
+
+    console.log("ข้อมูลที่กำลังจะเพิ่ม:", taskData);
 
     renderTask(taskData);
     saveLocalTask(taskData);
     if (taskData.time) setAlarm(taskData);
 
-    // ล้างค่าหลังเพิ่มเสร็จ
+    // ล้างค่า
     taskInput.value = '';
     timeInput.value = '';
 }
 
 function renderTask(task) {
     const list = document.getElementById('todoList');
+    if (!list) return;
+
     const li = document.createElement('li');
     li.setAttribute('data-id', task.id);
     if (task.completed) li.classList.add('completed');
@@ -46,7 +69,7 @@ function renderTask(task) {
             <strong class="task-text">${task.text}</strong><br>
             <small>⏰ ${task.time ? new Date(task.time).toLocaleString('th-TH') : 'ไม่ได้ตั้งเวลา'}</small>
         </div>
-        <button onclick="removeTask(${task.id}, this)">ลบ</button>
+        <button onclick="removeTask(${task.id}, this)" style="background:red; color:white;">ลบ</button>
     `;
     list.appendChild(li);
 }
@@ -62,34 +85,19 @@ function setAlarm(task) {
             const currentTask = tasks.find(t => t.id === task.id);
             
             if (currentTask && !currentTask.completed) {
-                // 1. เล่นเสียง (จะดังต่อเมื่อคุณเคยคลิกหน้าเว็บนั้นอย่างน้อย 1 ครั้ง)
                 const sound = document.getElementById('notificationSound');
-                if (sound) sound.play().catch(() => console.log("รอการคลิกเพื่อเล่นเสียง"));
-
-                // 2. แจ้งเตือนข้อความบนหน้าจอ (Notification)
-                if (Notification.permission === "granted") {
-                    new Notification("🔔 ถึงเวลาแล้ว!", { body: task.text });
-                }
+                if (sound) sound.play().catch(() => {});
                 
-                // 3. แจ้งเตือนแบบ Alert (กันพลาด)
-                alert("⏰ แจ้งเตือน: " + task.text);
+                if (Notification.permission === "granted") {
+                    new Notification("🔔 แจ้งเตือน: " + task.text);
+                }
+                alert("⏰ ถึงเวลา: " + task.text);
             }
         }, delay);
     }
 }
 
-// ฟังก์ชันอื่นๆ (Toggle/Save/Get/Remove) เหมือนเดิมแต่เช็ค Logic ให้แม่น
-function toggleComplete(id, checkbox) {
-    const li = checkbox.parentElement;
-    li.classList.toggle('completed', checkbox.checked);
-    let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
-    const idx = tasks.findIndex(t => t.id === id);
-    if (idx !== -1) {
-        tasks[idx].completed = checkbox.checked;
-        localStorage.setItem('myTasks', JSON.stringify(tasks));
-    }
-}
-
+// --- ฟังก์ชันเสริม (Save/Load/Remove) ---
 function saveLocalTask(task) {
     let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
     tasks.push(task);
@@ -98,10 +106,17 @@ function saveLocalTask(task) {
 
 function getTasks() {
     let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
-    tasks.forEach(task => {
-        renderTask(task);
-        if (!task.completed) setAlarm(task);
-    });
+    tasks.forEach(task => renderTask(task));
+}
+
+function toggleComplete(id, checkbox) {
+    let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
+    const idx = tasks.findIndex(t => t.id === id);
+    if (idx !== -1) {
+        tasks[idx].completed = checkbox.checked;
+        localStorage.setItem('myTasks', JSON.stringify(tasks));
+        location.reload(); // รีโหลดเพื่อให้ขีดฆ่าแสดงผล
+    }
 }
 
 function removeTask(id, element) {
