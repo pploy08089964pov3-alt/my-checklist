@@ -85,13 +85,25 @@ function setAlarm(task) {
             const currentTask = tasks.find(t => t.id === task.id);
             
             if (currentTask && !currentTask.completed) {
+                // 1. เล่นเสียง
                 const sound = document.getElementById('notificationSound');
                 if (sound) sound.play().catch(() => {});
-                
-                if (Notification.permission === "granted") {
-                    new Notification("🔔 แจ้งเตือน: " + task.text);
+
+                // 2. แจ้งเตือนข้อความ (แบบ Android PWA)
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.showNotification("🔔 " + task.text, {
+                            body: "ได้เวลาทำรายการนี้แล้ว!",
+                            icon: 'https://cdn-icons-png.flaticon.com/512/179/179386.png',
+                            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110], // รูปแบบการสั่น
+                            requireInteraction: true, // ข้อความจะไม่หายไปจนกว่าจะกดปิด
+                            tag: 'checklist-notification-' + task.id
+                        });
+                    });
                 }
-                alert("⏰ ถึงเวลา: " + task.text);
+                
+                // 3. Alert สำรอง
+                alert("⏰ ถึงเวลาแล้ว: " + task.text);
             }
         }, delay);
     }
