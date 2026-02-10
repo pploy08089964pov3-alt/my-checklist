@@ -15,12 +15,13 @@
     <div class="container">
         <h2>📝 รายการของฉัน</h2>
         <div class="input-group">
-            <input type="text" id="todoInput" placeholder="ต้องทำอะไร...">
-            <input type="text" id="reminderTime" 
-      <input type="text" id="reminderTime" placeholder="📅 เลือกวันที่และเวลา...">
-            <button onclick="addTask()">เพิ่มรายการ</button>
-        </div>
-        <ul id="todoList"></ul>
+           <input type="text" id="todoInput" placeholder="ต้องทำอะไร...">
+
+<input type="datetime-local" id="reminderTime">
+
+<button id="addBtn">เพิ่มรายการ</button>
+
+<audio id="notificationSound" src="ping.mp3" preload="auto"></audio>
     </div>
     <script src="script.js"></script>
     <audio id="notificationSound" src="ping.mp3" preload="auto"></audio>
